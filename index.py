@@ -1,25 +1,25 @@
 import json  # Импортируем модуль для работы с JSON файлами.
-file = open("fish.json", 'r', encoding='utf-8')  # Открываем файл fish.json в режиме чтения с кодировкой UTF-8.
-data = json.load(file)  # Загружаем содержимое JSON файла в переменную `data`.
-counter = 0  # Инициализируем счетчик операций.
-run = True
 # Запускаем бесконечный цикл для работы программы до выхода пользователя.
-
-def menu():
-    global counter
-    # Выводим текстовое меню для выбора действия.
-    print("""
-       1: Вывести все записи 
-       2: Вывести запись по полю 
-       3: Добавить запись 
-       4: Удалить запись по полю 
-       5: Выйти из программы
-    """)
-      # Получаем ввод пользователя для выбора действия.
+def main(): # Функция main вызывающая все остальные функции
+    file = open("fish.json", 'r', encoding='utf-8')  # Открываем файл fish.json в режиме чтения с кодировкой UTF-8.
+    data = json.load(file)  # Загружаем содержимое JSON файла в переменную `data`.
+    counter = 0  # Инициализируем счетчик операций.
+    run = True
+    def menu():
+        nonlocal counter
+        # Выводим текстовое меню для выбора действия.
+        print("""
+        1: Вывести все записи 
+        2: Вывести запись по полю 
+        3: Добавить запись 
+        4: Удалить запись по полю 
+        5: Выйти из программы
+        """)
+        # Получаем ввод пользователя для выбора действия.
 
     # Обработка действия 1: Вывод всех записей.
-def all():
-        global counter
+    def all():
+        nonlocal counter
         for fish in data:  # Перебираем все записи (объекты) из списка `data`.
             print(f"""
             Номер записи: {fish['id']}, 
@@ -31,8 +31,8 @@ def all():
         counter += 1  # Увеличиваем счетчик операций.
 
     # Обработка действия 2: Поиск записи по полю `id`.
-def fish():
-        global counter
+    def fish():
+        nonlocal counter
         id = int(input("Введите номер рыбы: "))  # Запрашиваем номер записи.
         find = False  # Переменная для проверки, была ли найдена запись.
         for fish in data:  # Перебираем все записи.
@@ -51,22 +51,22 @@ def fish():
             print("Запись не найдена.")
 
     # Обработка действия 3: Добавление новой записи.
-def add(): 
-        global counter
+    def add(): 
+        nonlocal counter
         id = max(fish['id'] for fish in data) + 1 if data else 1 # Находим максимально существующий id
         name = input("Введите общее название рыбы: ")  
         latin_name = input("Введите латинское название рыбы: ")  
         is_salt_water_fish = input("Введите, является ли рыба пресноводной (да/нет): ")  
         sub_type_count = input("Введите количество подвидов этой рыбы: ")
 
-            # Формируем новый объект записи.
+        # Формируем новый объект записи.
         new_fish = {
-                'id': id,
-                'name': name,
-                'latin_name': latin_name,
-                'is_salt_water_fish': True if is_salt_water_fish.lower() == 'да' else False, 
-                'sub_type_count': sub_type_count
-            }
+            'id': id,
+            'name': name,
+            'latin_name': latin_name,
+            'is_salt_water_fish': True if is_salt_water_fish.lower() == 'да' else False, 
+            'sub_type_count': sub_type_count
+        }
         data.append(new_fish)  # Добавляем новую запись в список.
         with open("fish.json", 'w', encoding='utf-8') as out_file:  # Открываем файл для записи.
             json.dump(data, out_file)  # Сохраняем обновленный список в файл.
@@ -74,8 +74,8 @@ def add():
         counter += 1  # Увеличиваем счетчик операций.
 
     # Обработка действия 4: Удаление записи по полю `id`.
-def delete():
-        global counter
+    def delete():
+        nonlocal counter
         id = int(input("Введите номер рыбы: "))  # Запрашиваем номер записи.
         find = False  # Переменная для проверки, была ли найдена запись.
         for fish in data:  # Перебираем записи.
@@ -92,17 +92,16 @@ def delete():
             counter += 1  # Увеличиваем счетчик операций.
 
     # Обработка действия 5: Завершение работы программы.
-def exit():
-        global run
-        global counter
+    def exit():
+        nonlocal run
+        nonlocal counter
         print(f"""Программа завершена.
-               Количество операций: {counter}""")  # Выводим сообщение о завершении и количество операций.
+                Количество операций: {counter}""")  # Выводим сообщение о завершении и количество операций.
         run = False
-def main(): # Функция main вызывающая все остальные функции
+
     while run:
         menu()
         num = int(input("Введите номер действия: "))
-
         if num == 1:
             all()
         elif num == 2:
@@ -114,6 +113,6 @@ def main(): # Функция main вызывающая все остальные
         elif num == 5:
             exit()
         else:
-             print("Такого номера нет.")
+            print("Такого номера нет.")
 
 main() # Вызов функции
